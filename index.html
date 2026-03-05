@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>מסיבת הפורים של יעלה ובר 🎭</title>
+    <title>מסיבת הפורים של יעלה וניס 🎭</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎭</text></svg>">
     <meta name="description"
         content="מסיבת פורים מהסרטים! שבת 7 במרץ 2026, 19:00, 6 Woorang St Eastwood. תחפושת חובה." />
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Fredoka+One&display=swap"
@@ -73,16 +75,60 @@
             }
 
             10% {
-                opacity: 0.7;
+                opacity: 0.8;
             }
 
             90% {
-                opacity: 0.4;
+                opacity: 0.6;
             }
 
             100% {
                 transform: translateY(-10vh) rotate(360deg);
                 opacity: 0;
+            }
+        }
+
+        /* ── CLICK WORDS ── */
+        .click-word {
+            position: fixed;
+            pointer-events: none;
+            z-index: 999;
+            font-family: 'Fredoka One', cursive;
+            font-weight: 900;
+            color: var(--gold);
+            font-size: 1.8rem;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+            animation: wordPop 0.8s ease-out forwards;
+            white-space: nowrap;
+        }
+
+        @keyframes wordPop {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(-50%, calc(-50% - 100px)) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        body.pulse-bg {
+            animation: bgPulse 0.4s ease-out;
+        }
+
+        @keyframes bgPulse {
+            0% {
+                background: var(--bg);
+            }
+
+            30% {
+                background: #3a0070;
+            }
+
+            100% {
+                background: var(--bg);
             }
         }
 
@@ -335,23 +381,83 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.4rem;
-            margin-top: 1rem;
+            gap: 0.5rem;
+            margin-top: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .hosted-by:hover {
+            transform: scale(1.1) rotate(2deg);
         }
 
         .hosted-photo {
-            width: 62px;
-            height: 62px;
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid var(--gold);
-            box-shadow: 0 0 18px rgba(255, 215, 0, 0.4);
+            border: 4px solid var(--gold);
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+            }
+
+            to {
+                box-shadow: 0 0 30px rgba(255, 215, 0, 0.7);
+            }
         }
 
         .hosted-label {
-            font-size: 0.88rem;
-            font-weight: 800;
+            font-size: 0.95rem;
+            font-weight: 900;
             color: var(--gold);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ── BIG PHOTO MODAL ── */
+        #photo-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            padding: 20px;
+        }
+
+        #photo-modal img {
+            max-width: 100%;
+            max-height: 80vh;
+            border: 5px solid var(--gold);
+            border-radius: 20px;
+            box-shadow: 0 0 50px var(--gold);
+        }
+
+        #photo-modal .close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 3rem;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        #photo-modal .caption {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-family: 'Fredoka One';
+            color: var(--gold);
+            font-size: 1.5rem;
+            padding: 0 20px;
         }
 
         /* ══ PANEL 2: COSTUME ══ */
@@ -968,7 +1074,7 @@
 
         #ticker-inner {
             display: inline-block;
-            animation: tickerMove 28s linear infinite;
+            animation: tickerMove 14s linear infinite;
             padding-right: 100%;
         }
 
@@ -1079,230 +1185,283 @@
 
                 <div class="info-pills">
                     <div class="pill pill-gold">📅 שבת, 7 במרץ 2026</div>
-                    <div class="pill pill-pink">⏰ 19:00 בדיוק</div>
-                    <div class="pill pill-teal">🏠 6 Woorang St, Eastwood</div>
+                    <div class="pill pill-gold" onclick="funClick('📅 שבת, 7 במרץ 2026? תרשמו ביומן, אל תשכחו!')">📅
+                        שבת, 7 במרץ 2026</div>
+                    <div class="pill pill-pink" onclick="funClick('⏰ 19:00 בדיוק! לא 19:01, לא 18:59. בדיוק!')">⏰ 19:00
+                        בדיוק</div>
+                    <div class="pill pill-teal" onclick="funClick('🏠 6 Woorang St, Eastwood. אל תלכו לכתובת הישנה!')">
+                        🏠 6 Woorang St, Eastwood</div>
                 </div>
 
                 <div class="includes-row">
-                    <div class="inc-chip">🍸 בר פתוח</div>
-                    <div class="inc-chip">🍽️ אוכל</div>
-                    <div class="inc-chip">✨ פינוקים</div>
-                    <div class="inc-chip">🎵 מוזיקה מטורפת</div>
-                    <div class="inc-chip">📸 צלם מגנטים</div>
-                    <div class="inc-chip">🏆 פרס תחפושת</div>
+                    <div class="inc-chip" onclick="funClick('🍸 בר פתוח? אל תגזימו, מישהי צריכה לנקות אחר כך...')">🍸 בר
+                        פתוח</div>
+                    <div class="inc-chip" onclick="funClick('🍽️ אוכל כיד המלך! (או כיד יעלה, מה שיותר טעים)')">🍽️ אוכל
+                    </div>
+                    <div class="inc-chip" onclick="funClick('✨ פינוקים? ברור, יש במבות בשפע!')">✨ פינוקים</div>
+                    <div class="inc-chip" onclick="funClick('🎵 מוזיקה בפול ווליום עד שהשכנים יזמינו משטרה!')">🎵 מוזיקה
+                        מטורפת</div>
+                    <div class="inc-chip" onclick="funClick('📸 תעשו פרצוף יפה, זה הולך למגנט המקרר שלכם')">📸 צלם
+                        מגנטים</div>
+                    <div class="inc-chip" onclick="funClick('🏆 פרס תחפושת? בוריס כבר בלחץ!')">🏆 פרס תחפושת</div>
                 </div>
 
-                <div class="hosted-by">
+                <div class="hosted-by" onclick="openBigPhoto('yeela-host.jpg', 'המארחים המשוגעים שלכם! 🎊')">
                     <img src="yeela-host.jpg" alt="יעלה וניס" class="hosted-photo"
                         onerror="this.style.display='none'" />
                     <div class="hosted-label">🎉 בהגשת יעלה וניס</div>
+                    <div style="font-size:0.6rem; color:var(--muted); opacity:0.7;">(לחצו עלינו!)</div>
                 </div>
             </div>
-
-            <!-- ══ PANEL 2: תחפושת ══ -->
-            <div class="panel" id="panel-costume">
-                <div class="costume-big">🎭</div>
-                <div class="costume-title">מחופשים או לא נכנסים!</div>
-                <p class="costume-desc">זה לא המלצה. זה חוק. יש בדיקה בכניסה 👮‍♂️<br />ופרס לתחפושת המנצחת 🏆</p>
-
-                <div class="costume-rules">
-                    <div class="rule glass">
-                        <span class="rule-icon">👮‍♂️</span>
-                        <span class="rule-text">בדיקת תחפושת בכניסה — אין חריגים!</span>
-                    </div>
-                    <div class="rule glass">
-                        <span class="rule-icon">🏆</span>
-                        <span class="rule-text">פרס לתחפושת הטובה ביותר — תשקיעו!</span>
-                    </div>
-                    <div class="rule glass">
-                        <span class="rule-icon">🤩</span>
-                        <span class="rule-text">ככל שיותר משוגע — כך יותר טוב!</span>
-                    </div>
-                    <div class="rule glass" style="background:rgba(236,72,153,0.12);border-color:rgba(236,72,153,0.3)">
-                        <span class="rule-icon">🚫</span>
-                        <span class="rule-text" style="color:#f9a8d4">ההזמנה אישית ולא ניתנת להעברה!</span>
-                    </div>
-                </div>
-
-                <!-- QUIZ GAME -->
-                <div class="costume-quiz glass"
-                    style="margin-top: 1.5rem; padding: 1.2rem; width: 100%; max-width: 360px;">
-                    <h4 style="color: var(--gold); margin-bottom: 0.8rem; font-size: 0.95rem; line-height: 1.4;">❓ חידון
-                        פורים: מי היו הזוכים הגדולים של השנה שעברה?</h4>
-                    <div id="quiz-options" style="display: flex; flex-direction: column; gap: 0.6rem;">
-                        <button class="map-btn"
-                            style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #fff; width: 100%; justify-content: center; font-size: 0.9rem;"
-                            onclick="checkQuiz('boris', this)">בוריס ואלינה</button>
-                        <button class="map-btn"
-                            style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #fff; width: 100%; justify-content: center; font-size: 0.9rem;"
-                            onclick="checkQuiz('oren', this)">אורן והשלט</button>
-                        <button class="map-btn"
-                            style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #fff; width: 100%; justify-content: center; font-size: 0.9rem;"
-                            onclick="checkQuiz('yeela', this)">יעלה וניס</button>
-                    </div>
-                    <div id="quiz-result"
-                        style="margin-top: 1rem; font-size: 0.9rem; display: none; font-weight: 700; line-height: 1.5; text-align: center;">
-                    </div>
-                </div>
-            </div>
-
-            <!-- ══ PANEL 3: כתובת ══ -->
-            <div class="panel" id="panel-map">
-                <div class="map-title">📍 כתובת המסיבה</div>
-                <div class="new-tag">🚨 כתובת חדשה השנה — אל תתבלבלו!</div>
-
-                <div class="map-card glass">
-                    <div class="map-top">
-                        <div class="map-pin">📍</div>
-                        <div style="font-size:1.05rem;font-weight:800">6 Woorang St</div>
-                        <div style="color:var(--muted);font-size:0.88rem">Eastwood NSW 2122</div>
-                        <a href="https://www.google.com/maps/dir/?api=1&destination=6+Woorang+St,+Eastwood+NSW+2122"
-                            target="_blank" class="map-btn" style="margin-top:0.5rem">
-                            🗺️ ניווט
-                        </a>
-                    </div>
-                    <div class="map-bottom">
-                        <div class="map-addr">
-                            בית של יעלה ובר
-                            <span>שבת · 7 במרץ · 19:00</span>
-                        </div>
-                        <a href="https://www.google.com/maps/dir/?api=1&destination=6+Woorang+St,+Eastwood+NSW+2122"
-                            target="_blank" class="map-btn">
-                            הוראות הגעה
-                        </a>
-                    </div>
-                </div>
-
-                <p class="map-note">
-                    עברנו! <strong>לא ללכת לכתובת מהשנה שעברה</strong> — שם גרה משפחה סינית עם ילד אחד ואין להם מסיבה 😅
-                </p>
-            </div>
-
-            <!-- ══ PANEL 4: הרשמה ══ -->
-            <div class="panel" id="panel-rsvp">
-                <div class="rsvp-scroll">
-
-                    <!-- FORM -->
-                    <div id="rsvp-form-block" class="rsvp-inner">
-                        <div class="rsvp-title">🎟️ הרשמה ותשלום</div>
-                        <div class="rsvp-sub">מלאו פה, שלמו ליעלה — ואתם בפנים!</div>
-
-                        <!-- NAME -->
-                        <div>
-                            <div class="sect-lbl">השם שלכם</div>
-                            <input type="text" class="name-input" id="f-name" placeholder="שם פרטי ומשפחה..." />
-                        </div>
-
-                        <!-- TICKETS -->
-                        <div>
-                            <div class="sect-lbl">בא לי לבוא...</div>
-                            <div class="tickets">
-                                <div class="ticket t-solo" data-val="single" onclick="selTicket(this)">
-                                    <div class="t-em">🕺</div>
-                                    <div class="t-type">לבד</div>
-                                    <div class="t-price">$45</div>
-                                </div>
-                                <div class="ticket t-couple" data-val="couple" onclick="selTicket(this)">
-                                    <div class="t-em">💑</div>
-                                    <div class="t-type">זוגי</div>
-                                    <div class="t-price">$90</div>
-                                </div>
-                                <div class="ticket t-no" data-val="no" onclick="selTicket(this)"
-                                    style="grid-column:1/-1">
-                                    <div class="t-em">😢</div>
-                                    <div class="t-type">לא מגיע/ה</div>
-                                    <div class="t-price" style="font-size:1rem;color:var(--muted)">ספרו ליעלה</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- PAYMENT -->
-                        <div class="pay-box" id="pay-section">
-                            <h3>💳 העברה בנקאית ליעלה</h3>
-                            <div class="pay-row">
-                                <span class="pay-lbl">שם</span>
-                                <div><span class="pay-val">Ye'ela Bar</span><button class="copy-btn"
-                                        onclick="cp(this,'Yeela Bar')">העתק</button></div>
-                            </div>
-                            <div class="pay-row">
-                                <span class="pay-lbl">BSB</span>
-                                <div><span class="pay-val">182-182</span><button class="copy-btn"
-                                        onclick="cp(this,'182182')">העתק</button></div>
-                            </div>
-                            <div class="pay-row">
-                                <span class="pay-lbl">חשבון</span>
-                                <div><span class="pay-val">017 272 667</span><button class="copy-btn"
-                                        onclick="cp(this,'017272667')">העתק</button></div>
-                            </div>
-                        </div>
-
-                        <div class="warn-box">⚠️ חובה לכתוב את <strong>שמכם</strong> בפרטי ההעברה — יעלה מחפשת אתכם!
-                        </div>
-
-                        <!-- DIET -->
-                        <div>
-                            <div class="sect-lbl">העדפות אוכל</div>
-                            <div class="diet-grid">
-                                <div class="diet-opt" data-val="none" onclick="selDiet(this)">
-                                    <div class="de">🍗</div>
-                                    <div class="dl">ללא</div>
-                                </div>
-                                <div class="diet-opt" data-val="vegetarian" onclick="selDiet(this)">
-                                    <div class="de">🥗</div>
-                                    <div class="dl">צמחוני</div>
-                                </div>
-                                <div class="diet-opt" data-val="vegan" onclick="selDiet(this)">
-                                    <div class="de">🌱</div>
-                                    <div class="dl">טבעוני</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <button class="submit-btn" id="submit-btn" onclick="submitRsvp()">
-                            🎉 שילמתי — רשמו אותי!
-                        </button>
-
-                        <div style="text-align:center;font-size:0.76rem;color:var(--muted);padding-bottom:0.5rem">
-                            לשאלות? כתבו ישירות ליעלה בוואטסאפ 💬
-                        </div>
-                    </div>
-
-                    <!-- SUCCESS -->
-                    <div class="rsvp-success" id="rsvp-success">
-                        <div class="boom" id="s-boom">🎊</div>
-                        <h2 id="s-title">תראו מי בא!</h2>
-                        <p id="s-msg"></p>
-                    </div>
-
-                </div>
-            </div><!-- /panel-rsvp -->
-
-        </div><!-- /panels -->
-
-        <!-- OREN BADGE -->
-        <div id="oren-badge">
-            <img src="oren-logo.jpg" alt="אורן" onerror="this.style.display='none'" />
-            <span>בניית <strong>אורן</strong> 👋</span>
         </div>
 
-        <!-- TAB BAR -->
-        <nav class="tabbar">
-            <button class="tab active" onclick="goTab(0,this)">
-                <span class="ti">🎊</span><span>מסיבה</span>
-            </button>
-            <button class="tab" onclick="goTab(1,this)">
-                <span class="ti">🎭</span><span>תחפושת</span>
-            </button>
-            <button class="tab" onclick="goTab(2,this)">
-                <span class="ti">📍</span><span>כתובת</span>
-            </button>
-            <button class="tab" onclick="goTab(3,this)">
-                <span class="ti">🎟️</span><span>הרשמה</span>
-            </button>
-        </nav>
+        <!-- ══ PANEL 2: תחפושת ══ -->
+        <div class="panel" id="panel-costume">
+            <div class="costume-big">🎭</div>
+            <div class="costume-title">מחופשים או לא נכנסים!</div>
+            <p class="costume-desc">זה לא המלצה. זה חוק. יש בדיקה בכניסה 👮‍♂️<br />ופרס לתחפושת המנצחת 🏆</p>
+
+            <div class="costume-rules">
+                <div class="rule glass">
+                    <span class="rule-icon">👮‍♂️</span>
+                    <span class="rule-text">בדיקת תחפושת בכניסה — אין חריגים!</span>
+                </div>
+                <div class="rule glass">
+                    <span class="rule-icon">🏆</span>
+                    <span class="rule-text">פרס לתחפושת הטובה ביותר — תשקיעו!</span>
+                </div>
+                <div class="rule glass">
+                    <span class="rule-icon">🤩</span>
+                    <span class="rule-text">ככל שיותר משוגע — כך יותר טוב!</span>
+                </div>
+                <div class="rule glass" style="background:rgba(236,72,153,0.12);border-color:rgba(236,72,153,0.3)">
+                    <span class="rule-icon">🚫</span>
+                    <span class="rule-text" style="color:#f9a8d4">ההזמנה אישית ולא ניתנת להעברה!</span>
+                </div>
+            </div>
+
+            <!-- QUIZ GAME -->
+            <div class="costume-quiz glass" style="margin-top: 1.5rem; padding: 1.2rem; width: 100%; max-width: 360px;">
+                <h4 style="color: var(--gold); margin-bottom: 0.8rem; font-size: 0.95rem; line-height: 1.4;">❓ חידון
+                    פורים: מי היו הזוכים הגדולים של השנה שעברה?</h4>
+                <div id="quiz-options" style="display: flex; flex-direction: column; gap: 0.6rem;">
+                    <button class="map-btn"
+                        style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #fff; width: 100%; justify-content: center; font-size: 0.9rem;"
+                        onclick="checkQuiz('boris', this)">בוריס ואלינה</button>
+                    <button class="map-btn"
+                        style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #fff; width: 100%; justify-content: center; font-size: 0.9rem;"
+                        onclick="checkQuiz('oren', this)">אורן והשלט</button>
+                    <button class="map-btn"
+                        style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #fff; width: 100%; justify-content: center; font-size: 0.9rem;"
+                        onclick="checkQuiz('yeela', this)">יעלה וניס</button>
+                </div>
+                <div id="quiz-result"
+                    style="margin-top: 1rem; font-size: 0.9rem; display: none; font-weight: 700; line-height: 1.5; text-align: center;">
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ PANEL 3: כתובת ══ -->
+        <div class="panel" id="panel-map">
+            <div class="map-title">📍 כתובת המסיבה</div>
+            <div class="new-tag">🚨 כתובת חדשה השנה — אל תתבלבלו!</div>
+
+            <div class="map-card glass">
+                <div class="map-top">
+                    <div class="map-pin">📍</div>
+                    <div style="font-size:1.05rem;font-weight:800">6 Woorang St</div>
+                    <div style="color:var(--muted);font-size:0.88rem">Eastwood NSW 2122</div>
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=6+Woorang+St,+Eastwood+NSW+2122"
+                        target="_blank" class="map-btn" style="margin-top:0.5rem">
+                        🗺️ ניווט
+                    </a>
+                </div>
+                <div class="map-bottom">
+                    <div class="map-addr">
+                        בית של יעלה ובר
+                        <span>שבת · 7 במרץ · 19:00</span>
+                    </div>
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=6+Woorang+St,+Eastwood+NSW+2122"
+                        target="_blank" class="map-btn">
+                        הוראות הגעה
+                    </a>
+                </div>
+            </div>
+
+            <p class="map-note">
+                עברנו! <strong>לא ללכת לכתובת מהשנה שעברה</strong> — שם גרה משפחה סינית עם ילד אחד ואין להם מסיבה 😅
+            </p>
+        </div>
+
+        <!-- ══ PANEL 4: הרשמה ══ -->
+        <div class="panel" id="panel-rsvp">
+            <div class="rsvp-scroll">
+
+                <!-- FORM -->
+                <div id="rsvp-form-block" class="rsvp-inner">
+                    <div class="rsvp-title">🎟️ הרשמה ותשלום</div>
+                    <div class="rsvp-sub">מלאו פה, שלמו ליעלה — ואתם בפנים!</div>
+
+                    <!-- NAME -->
+                    <div>
+                        <div class="sect-lbl">השם שלכם</div>
+                        <input type="text" class="name-input" id="f-name" placeholder="שם פרטי ומשפחה..." />
+                    </div>
+
+                    <!-- TICKETS -->
+                    <div>
+                        <div class="sect-lbl">בא לי לבוא...</div>
+                        <div class="tickets">
+                            <div class="ticket t-solo" data-val="single" onclick="selTicket(this)">
+                                <div class="t-em">🕺</div>
+                                <div class="t-type">לבד</div>
+                                <div class="t-price">$45</div>
+                            </div>
+                            <div class="ticket t-couple" data-val="couple" onclick="selTicket(this)">
+                                <div class="t-em">💑</div>
+                                <div class="t-type">זוגי</div>
+                                <div class="t-price">$90</div>
+                            </div>
+                            <div class="ticket t-no" data-val="no" onclick="selTicket(this)" style="grid-column:1/-1">
+                                <div class="t-em">😢</div>
+                                <div class="t-type">לא מגיע/ה</div>
+                                <div class="t-price" style="font-size:1rem;color:var(--muted)">ספרו ליעלה</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PAYMENT -->
+                    <div class="pay-box" id="pay-section">
+                        <h3>💳 העברה בנקאית ליעלה</h3>
+                        <div class="pay-row">
+                            <span class="pay-lbl">שם</span>
+                            <div><span class="pay-val">Ye'ela Bar</span><button class="copy-btn"
+                                    onclick="cp(this,'Yeela Bar')">העתק</button></div>
+                        </div>
+                        <div class="pay-row">
+                            <span class="pay-lbl">BSB</span>
+                            <div><span class="pay-val">182-182</span><button class="copy-btn"
+                                    onclick="cp(this,'182182')">העתק</button></div>
+                        </div>
+                        <div class="pay-row">
+                            <span class="pay-lbl">חשבון</span>
+                            <div><span class="pay-val">017 272 667</span><button class="copy-btn"
+                                    onclick="cp(this,'017272667')">העתק</button></div>
+                        </div>
+                    </div>
+
+                    <div class="warn-box">⚠️ חובה לכתוב את <strong>שמכם</strong> בפרטי ההעברה — יעלה מחפשת אתכם!
+                    </div>
+
+                    <!-- DIET -->
+                    <div>
+                        <div class="sect-lbl">העדפות אוכל</div>
+                        <div class="diet-grid">
+                            <div class="diet-opt" data-val="none" onclick="selDiet(this)">
+                                <div class="de">🍗</div>
+                                <div class="dl">ללא</div>
+                            </div>
+                            <div class="diet-opt" data-val="vegetarian" onclick="selDiet(this)">
+                                <div class="de">🥗</div>
+                                <div class="dl">צמחוני</div>
+                            </div>
+                            <div class="diet-opt" data-val="vegan" onclick="selDiet(this)">
+                                <div class="de">🌱</div>
+                                <div class="dl">טבעוני</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="submit-btn" id="submit-btn" onclick="submitRsvp()">
+                        🎉 שילמתי — רשמו אותי!
+                    </button>
+
+                    <div style="text-align:center;font-size:0.76rem;color:var(--muted);padding-bottom:0.5rem">
+                        לשאלות? כתבו ישירות ליעלה בוואטסאפ 💬
+                    </div>
+                </div>
+
+                <!-- SUCCESS -->
+                <div class="rsvp-success" id="rsvp-success">
+                    <div class="boom" id="s-boom">🎊</div>
+                    <h2 id="s-title">תראו מי בא!</h2>
+                    <p id="s-msg"></p>
+                </div>
+
+            </div>
+        </div><!-- /panel-rsvp -->
+
+    </div><!-- /panels -->
+
+    <!-- BIG PHOTO MODAL -->
+    <div id="photo-modal" onclick="this.style.display='none'">
+        <span class="close">&times;</span>
+        <img src="" id="modal-img">
+        <div class="caption" id="modal-cap"></div>
+    </div>
+
+    <!-- OREN BADGE -->
+    <div id="oren-badge" onclick="openBigPhoto('oren-logo.jpg', 'אורן בנה, אורן עיצב, אורן עכשיו רוצה עראק 🥃')">
+        <img src="oren-logo.jpg" alt="אורן" onerror="this.style.display='none'" />
+        <span>בניית <strong>אורן</strong> 👋</span>
+    </div>
+
+    <!-- TAB BAR -->
+    <nav class="tabbar">
+        <button class="tab active" onclick="goTab(0,this)">
+            <span class="ti">🎊</span><span>מסיבה</span>
+        </button>
+        <button class="tab" onclick="goTab(1,this)">
+            <span class="ti">🎭</span><span>תחפושת</span>
+        </button>
+        <button class="tab" onclick="goTab(2,this)">
+            <span class="ti">📍</span><span>כתובת</span>
+        </button>
+        <button class="tab" onclick="goTab(3,this)">
+            <span class="ti">🎟️</span><span>הרשמה</span>
+        </button>
+    </nav>
     </div>
 
     <script>
+        /* ── GLOBAL INTERACTION ── */
+        const CRAZY_WORDS = ['בום!', 'וואו!', 'בלאגן!', 'מטורף!', 'פורים!', 'יאללה!', 'איזה כיף!', 'עדלאידע!', 'חג שמח!', 'עראק!', 'במבה!'];
+        const TS = Date.now();
+
+        document.addEventListener('click', (e) => {
+            // 1. Confetti
+            boom(e.clientX, e.clientY);
+
+            // 2. Visual Word
+            const word = document.createElement('div');
+            word.className = 'click-word';
+            word.textContent = CRAZY_WORDS[Math.floor(Math.random() * CRAZY_WORDS.length)];
+            word.style.left = e.clientX + 'px';
+            word.style.top = e.clientY + 'px';
+            word.style.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+            document.body.appendChild(word);
+            setTimeout(() => word.remove(), 800);
+
+            // 3. Pulse background
+            document.body.classList.remove('pulse-bg');
+            void document.body.offsetWidth; // trigger reflow
+            document.body.classList.add('pulse-bg');
+
+            if (navigator.vibrate) navigator.vibrate(20);
+        });
+
+        function funClick(msg) {
+            toast(msg);
+        }
+
+        function openBigPhoto(src, cap) {
+            const m = document.getElementById('photo-modal');
+            document.getElementById('modal-img').src = src + '?t=' + TS;
+            document.getElementById('modal-cap').textContent = cap;
+            m.style.display = 'flex';
+            boom(window.innerWidth / 2, window.innerHeight / 2);
+        }
+
         /* ── FIREBASE ── */
         const firebaseConfig = {
             apiKey: "AIzaSyCcnpQDPsQptHdZKHupXOZNqNbO1JOD1Ss",
