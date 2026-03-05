@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Ye'ela's Purim Party 🎭</title>
+    <meta name="description"
+        content="You're invited to Ye'ela & Bar's Purim party! Saturday 7 March 2026, 7pm, 6 Woorang St Eastwood." />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Inter:wght@400;500;600;700&family=Righteous&display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            --bg: #1a0035;
+            --gold: #FFD700;
+            --gold2: #FFA500;
+            --purple: #9333ea;
+            --pink: #ec4899;
+            --teal: #06b6d4;
+            --green: #22c55e;
+            --card: rgba(255, 255, 255, 0.09);
+            --border: rgba(255, 255, 255, 0.14);
+            --text: #fff;
+            --muted: rgba(255, 255, 255, 0.6);
+            --tab-h: 72px;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* ── FLOATING EMOJI LAYER ── */
+        #floaters {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .floater {
+            position: absolute;
+            font-size: 1.6rem;
+            animation: floatUp linear infinite;
+            opacity: 0;
+            user-select: none;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(110vh) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.7;
+            }
+
+            90% {
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: translateY(-10vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* ── APP SHELL ── */
+        #app {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── PANELS ── */
+        .panels {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem 1.25rem;
+            opacity: 0;
+            transform: translateX(60px);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .panel.active {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: all;
+        }
+
+        .panel.exit-left {
+            opacity: 0;
+            transform: translateX(-60px);
+        }
+
+        /* ── TAB BAR ── */
+        .tabbar {
+            height: var(--tab-h);
+            flex-shrink: 0;
+            display: flex;
+            background: rgba(10, 0, 25, 0.92);
+            border-top: 1px solid var(--border);
+            backdrop-filter: blur(20px);
+        }
+
+        .tab {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: var(--muted);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            transition: color 0.2s;
+            position: relative;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .tab .tab-icon {
+            font-size: 1.5rem;
+            transition: transform 0.2s;
+        }
+
+        .tab.active {
+            color: var(--gold);
+        }
+
+        .tab.active .tab-icon {
+            transform: scale(1.2);
+        }
+
+        .tab::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 25%;
+            right: 25%;
+            height: 2px;
+            background: var(--gold);
+            border-radius: 0 0 4px 4px;
+            transform: scaleX(0);
+            transition: transform 0.25s;
+        }
+
+        .tab.active::after {
+            transform: scaleX(1);
+        }
+
+        /* ── COMMON CARD ── */
+        .glass {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            backdrop-filter: blur(16px);
+        }
+
+        /* ── HOSTED BY ── */
+        .hosted-by {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1.2rem;
+        }
+
+        .hosted-photo {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--gold);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .hosted-label {
+            font-family: 'Fredoka One', cursive;
+            font-size: 0.95rem;
+            color: var(--gold);
+            letter-spacing: 0.5px;
+        }
+
+        /* ── OREN CREDIT BADGE ── */
+        #oren-badge {
+            position: fixed;
+            bottom: calc(var(--tab-h) + 10px);
+            right: 12px;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(10, 0, 25, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 99px;
+            padding: 4px 10px 4px 4px;
+            backdrop-filter: blur(12px);
+            cursor: default;
+            animation: slideIn 0.6s 1.5s ease both;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(60px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        #oren-badge img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1.5px solid var(--purple-light, #a855f7);
+        }
+
+        #oren-badge span {
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.55);
+            white-space: nowrap;
+        }
+
+        #oren-badge span strong {
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        /* ══════════════════════════════════════
+       PANEL 1 — PARTY
+    ══════════════════════════════════════ */
+        #panel-party {
+            background: radial-gradient(ellipse at 50% 0%, rgba(147, 51, 234, 0.5) 0%, transparent 65%),
+                radial-gradient(ellipse at 80% 100%, rgba(236, 72, 153, 0.35) 0%, transparent 60%);
+        }
+
+        .party-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: clamp(2.8rem, 9vw, 4.5rem);
+            line-height: 1;
+            text-align: center;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold2) 40%, var(--pink) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.3rem;
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.4));
+        }
+
+        .party-sub {
+            font-family: 'Righteous', cursive;
+            font-size: clamp(1rem, 3.5vw, 1.4rem);
+            color: var(--pink);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .info-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            justify-content: center;
+            margin-bottom: 1.4rem;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 1.1rem;
+            border-radius: 99px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .pill-gold {
+            background: rgba(255, 215, 0, 0.15);
+            border: 1.5px solid rgba(255, 215, 0, 0.4);
+            color: var(--gold);
+        }
+
+        .pill-pink {
+            background: rgba(236, 72, 153, 0.15);
+            border: 1.5px solid rgba(236, 72, 153, 0.4);
+            color: #f9a8d4;
+        }
+
+        .pill-teal {
+            background: rgba(6, 182, 212, 0.15);
+            border: 1.5px solid rgba(6, 182, 212, 0.4);
+            color: var(--teal);
+        }
+
+        .includes-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            justify-content: center;
+            max-width: 420px;
+        }
+
+        .inc-chip {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 0.5rem 0.85rem;
+            font-size: 0.82rem;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        /* countdown */
+        .countdown {
+            display: flex;
+            gap: 0.6rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .cd {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1.5px solid rgba(255, 215, 0, 0.3);
+            border-radius: 14px;
+            padding: 0.6rem 0.9rem;
+            text-align: center;
+            min-width: 64px;
+        }
+
+        .cd-n {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.8rem;
+            color: var(--gold);
+            line-height: 1;
+        }
+
+        .cd-l {
+            font-size: 0.6rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        .party-on {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.8rem;
+            color: var(--gold);
+            animation: pulse 1.2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+        }
+
+        /* ══════════════════════════════════════
+       PANEL 2 — COSTUME
+    ══════════════════════════════════════ */
+        #panel-costume {
+            background: radial-gradient(ellipse at 30% 50%, rgba(236, 72, 153, 0.4) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(147, 51, 234, 0.4) 0%, transparent 60%);
+        }
+
+        .costume-big {
+            font-size: clamp(5rem, 18vw, 8rem);
+            text-align: center;
+            margin-bottom: 0.5rem;
+            animation: wobble 3s ease-in-out infinite;
+        }
+
+        @keyframes wobble {
+
+            0%,
+            100% {
+                transform: rotate(-5deg) scale(1);
+            }
+
+            50% {
+                transform: rotate(5deg) scale(1.05);
+            }
+        }
+
+        .costume-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: clamp(2rem, 7vw, 2.8rem);
+            text-align: center;
+            background: linear-gradient(135deg, #f9a8d4, var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.75rem;
+        }
+
+        .costume-desc {
+            text-align: center;
+            color: var(--muted);
+            font-size: 1rem;
+            line-height: 1.6;
+            max-width: 340px;
+            margin-bottom: 1.5rem;
+        }
+
+        .costume-rules {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            width: 100%;
+            max-width: 360px;
+        }
+
+        .rule {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            padding: 0.9rem 1.2rem;
+            border-radius: 16px;
+        }
+
+        .rule-icon {
+            font-size: 1.5rem;
+        }
+
+        .rule-text {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* ══════════════════════════════════════
+       PANEL 3 — MAP
+    ══════════════════════════════════════ */
+        #panel-map {
+            background: radial-gradient(ellipse at 50% 50%, rgba(6, 182, 212, 0.3) 0%, transparent 65%);
+        }
+
+        .map-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: clamp(2rem, 7vw, 2.8rem);
+            text-align: center;
+            color: var(--teal);
+            margin-bottom: 0.5rem;
+        }
+
+        .map-new-tag {
+            display: inline-block;
+            background: rgba(236, 72, 153, 0.2);
+            border: 1px solid var(--pink);
+            color: var(--pink);
+            border-radius: 99px;
+            padding: 0.3rem 1rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 1.2rem;
+        }
+
+        .map-card {
+            width: 100%;
+            max-width: 440px;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1.5px solid rgba(6, 182, 212, 0.35);
+            box-shadow: 0 0 40px rgba(6, 182, 212, 0.2);
+        }
+
+        .map-embed {
+            width: 100%;
+            height: 230px;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .map-pin-big {
+            font-size: 3.5rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .map-footer {
+            padding: 1.1rem 1.4rem;
+            background: rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .map-address {
+            font-size: 0.9rem;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .map-address span {
+            display: block;
+            color: var(--muted);
+            font-size: 0.78rem;
+            font-weight: 400;
+        }
+
+        .map-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.82rem;
+            text-decoration: none;
+            background: linear-gradient(135deg, #4285f4, #0f9d58);
+            color: white;
+            white-space: nowrap;
+            transition: transform 0.2s, box-shadow 0.2s;
+            flex-shrink: 0;
+        }
+
+        .map-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(66, 133, 244, 0.4);
+        }
+
+        .map-note {
+            font-size: 0.82rem;
+            color: var(--muted);
+            text-align: center;
+            margin-top: 1rem;
+            max-width: 340px;
+        }
+
+        .map-note strong {
+            color: var(--pink);
+        }
+
+        /* ══════════════════════════════════════
+       PANEL 4 — RSVP & PAY
+    ══════════════════════════════════════ */
+        #panel-rsvp {
+            background: radial-gradient(ellipse at 50% 30%, rgba(255, 215, 0, 0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 20% 90%, rgba(147, 51, 234, 0.3) 0%, transparent 55%);
+            justify-content: flex-start;
+            padding-top: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .rsvp-inner {
+            width: 100%;
+            max-width: 440px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .rsvp-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: clamp(1.8rem, 6vw, 2.4rem);
+            text-align: center;
+            background: linear-gradient(135deg, var(--gold), var(--gold2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* tickets */
+        .tickets {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .ticket {
+            border-radius: 16px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+            user-select: none;
+        }
+
+        .ticket:hover {
+            transform: translateY(-2px);
+        }
+
+        .ticket.t-solo {
+            background: rgba(147, 51, 234, 0.15);
+            border-color: rgba(147, 51, 234, 0.35);
+        }
+
+        .ticket.t-couple {
+            background: rgba(236, 72, 153, 0.15);
+            border-color: rgba(236, 72, 153, 0.35);
+        }
+
+        .ticket.selected.t-solo {
+            border-color: var(--purple);
+            box-shadow: 0 0 20px rgba(147, 51, 234, 0.4);
+        }
+
+        .ticket.selected.t-couple {
+            border-color: var(--pink);
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.4);
+        }
+
+        .t-emoji {
+            font-size: 1.8rem;
+        }
+
+        .t-type {
+            font-size: 0.7rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin: 0.2rem 0;
+        }
+
+        .t-price {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.8rem;
+            color: var(--gold);
+        }
+
+        /* payment box */
+        .pay-box {
+            border-radius: 18px;
+            padding: 1rem 1.2rem;
+            background: rgba(255, 215, 0, 0.07);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .pay-box h3 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1rem;
+            color: var(--gold);
+            margin-bottom: 0.6rem;
+        }
+
+        .pay-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.4rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .pay-row:last-child {
+            border-bottom: none;
+        }
+
+        .pay-lbl {
+            font-size: 0.78rem;
+            color: var(--muted);
+        }
+
+        .pay-val {
+            font-size: 0.88rem;
+            font-weight: 700;
+        }
+
+        .copy-btn {
+            background: rgba(255, 215, 0, 0.12);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: var(--gold);
+            border-radius: 8px;
+            padding: 0.2rem 0.6rem;
+            font-size: 0.72rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-left: 0.5rem;
+            transition: background 0.15s;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 215, 0, 0.25);
+        }
+
+        .copy-btn.ok {
+            color: var(--green);
+            border-color: var(--green);
+        }
+
+        .warn-box {
+            background: rgba(236, 72, 153, 0.1);
+            border: 1px solid rgba(236, 72, 153, 0.3);
+            border-radius: 14px;
+            padding: 0.7rem 1rem;
+            font-size: 0.82rem;
+            color: #f9a8d4;
+            display: flex;
+            gap: 0.5rem;
+            align-items: flex-start;
+        }
+
+        /* diet */
+        .diet-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+
+        .diet-opt {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 0.65rem 0.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.15s;
+            user-select: none;
+        }
+
+        .diet-opt:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .diet-opt.selected {
+            border-color: var(--teal);
+            background: rgba(6, 182, 212, 0.15);
+            box-shadow: 0 0 14px rgba(6, 182, 212, 0.25);
+        }
+
+        .diet-opt .de {
+            font-size: 1.4rem;
+        }
+
+        .diet-opt .dl {
+            font-size: 0.72rem;
+            font-weight: 600;
+            margin-top: 0.2rem;
+            color: var(--muted);
+        }
+
+        .diet-opt.selected .dl {
+            color: var(--teal);
+        }
+
+        .section-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 0.4rem;
+        }
+
+        /* submit */
+        .submit-btn {
+            width: 100%;
+            padding: 0.95rem;
+            border: none;
+            border-radius: 16px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.3rem;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--purple), var(--pink));
+            color: white;
+            box-shadow: 0 6px 24px rgba(147, 51, 234, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(147, 51, 234, 0.5);
+        }
+
+        /* success */
+        .rsvp-success {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            gap: 1rem;
+            height: 100%;
+        }
+
+        .rsvp-success .big {
+            font-size: 5rem;
+            animation: spin 0.6s ease;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: scale(0) rotate(-180deg);
+            }
+
+            100% {
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        .rsvp-success h2 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2rem;
+            color: var(--gold);
+        }
+
+        .rsvp-success p {
+            color: var(--muted);
+            font-size: 0.95rem;
+            max-width: 280px;
+        }
+
+        /* scrollable panel inner fix */
+        #panel-rsvp .rsvp-wrapper {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.5rem 1.25rem 1.5rem;
+        }
+
+        /* ── RESPONSIVE TWEAKS ── */
+        @media (max-height: 700px) {
+            .party-title {
+                font-size: 2.4rem;
+            }
+
+            .costume-big {
+                font-size: 4rem;
+            }
+
+            .cd-n {
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (min-width: 600px) {
+            .panel {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Floating emojis -->
+    <div id="floaters"></div>
+
+    <div id="app">
+        <div class="panels">
+
+            <!-- ══ PANEL 1: PARTY ══ -->
+            <div class="panel active" id="panel-party">
+                <div class="party-title">מסיבת פורים<br />🎊</div>
+                <div class="party-sub">Ye'ela & Bar's Annual Purim Party</div>
+
+                <div id="cd-wrap" class="countdown"></div>
+
+                <div class="info-pills">
+                    <div class="pill pill-gold">📅 Saturday 7 March 2026</div>
+                    <div class="pill pill-pink">⏰ 7:00 PM</div>
+                    <div class="pill pill-teal">🏠 6 Woorang St, Eastwood</div>
+                </div>
+
+                <div class="includes-row">
+                    <div class="inc-chip">🍸 Open Bar</div>
+                    <div class="inc-chip">🍽️ Food</div>
+                    <div class="inc-chip">✨ Snacks</div>
+                    <div class="inc-chip">🎵 Music</div>
+                    <div class="inc-chip">📸 Magnet Photos</div>
+                    <div class="inc-chip">🏆 Costume Prize</div>
+                </div>
+
+                <div class="hosted-by">
+                    <img src="yeela-host.jpg" alt="Yeela & Bar" class="hosted-photo"
+                        onerror="this.style.display='none'" />
+                    <div class="hosted-label">🎉 Hosted by Ye'ela & Bar</div>
+                </div>
+            </div>
+
+            <!-- ══ PANEL 2: COSTUME ══ -->
+            <div class="panel" id="panel-costume">
+                <div class="costume-big">🎭</div>
+                <div class="costume-title">Dress Up or Stay Out!</div>
+                <p class="costume-desc">Costumes are mandatory.<br />No costume = no entry. It's the law of the land
+                    👮‍♂️</p>
+
+                <div class="costume-rules">
+                    <div class="rule glass">
+                        <span class="rule-icon">👮‍♂️</span>
+                        <span class="rule-text">Bouncer inspection at the door — no exceptions!</span>
+                    </div>
+                    <div class="rule glass">
+                        <span class="rule-icon">🏆</span>
+                        <span class="rule-text">Best costume wins a <strong>prize</strong> — go all out!</span>
+                    </div>
+                    <div class="rule glass">
+                        <span class="rule-icon">🤩</span>
+                        <span class="rule-text">The more creative, the better — wow us!</span>
+                    </div>
+                    <div class="rule glass" style="background:rgba(236,72,153,0.12);border-color:rgba(236,72,153,0.3)">
+                        <span class="rule-icon">🎪</span>
+                        <span class="rule-text" style="color:#f9a8d4">Invitation is personal, non-transferable!</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ PANEL 3: MAP ══ -->
+            <div class="panel" id="panel-map">
+                <div class="map-title">📍 Find Us</div>
+                <div class="map-new-tag">🚨 NEW ADDRESS THIS YEAR!</div>
+
+                <div class="map-card glass">
+                    <div class="map-embed">
+                        <div class="map-pin-big">📍</div>
+                        <div style="font-size:1.1rem;font-weight:700">6 Woorang St</div>
+                        <div style="color:var(--muted);font-size:0.9rem">Eastwood NSW 2122</div>
+                        <a href="https://www.google.com/search?q=6+Woorang+St+Eastwood+NSW+2122" target="_blank"
+                            class="map-btn" style="margin-top:0.5rem">
+                            🗺️ Open Maps
+                        </a>
+                    </div>
+                    <div class="map-footer">
+                        <div class="map-address">
+                            Ye'ela & Bar's Place
+                            <span>Saturday · 7 March · 7pm</span>
+                        </div>
+                        <a href="https://www.google.com/search?q=6+Woorang+St+Eastwood+NSW+2122" target="_blank"
+                            class="map-btn">
+                            Get Directions
+                        </a>
+                    </div>
+                </div>
+
+                <p class="map-note">
+                    We moved! <strong>Don't go to last year's address</strong> — a Chinese family lives there now 😅
+                </p>
+            </div>
+
+            <!-- ══ PANEL 4: RSVP + PAY ══ -->
+            <div class="panel" id="panel-rsvp">
+                <div class="rsvp-wrapper">
+
+                    <!-- FORM -->
+                    <div id="rsvp-form-block"
+                        style="width:100%;max-width:440px;display:flex;flex-direction:column;gap:1rem;">
+                        <div class="rsvp-title">🎟️ RSVP & Pay</div>
+
+                        <!-- TICKETS -->
+                        <div>
+                            <div class="section-label">Your Ticket</div>
+                            <div class="tickets">
+                                <div class="ticket t-solo" data-val="single" onclick="selectTicket(this)">
+                                    <div class="t-emoji">🕺</div>
+                                    <div class="t-type">Solo</div>
+                                    <div class="t-price">$45</div>
+                                </div>
+                                <div class="ticket t-couple" data-val="couple" onclick="selectTicket(this)">
+                                    <div class="t-emoji">💑</div>
+                                    <div class="t-type">Couple</div>
+                                    <div class="t-price">$90</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PAYMENT -->
+                        <div class="pay-box">
+                            <h3>💳 Transfer to Ye'ela</h3>
+                            <div class="pay-row">
+                                <span class="pay-lbl">Name</span>
+                                <div><span class="pay-val">Ye'ela Bar</span><button class="copy-btn"
+                                        onclick="cp(this,'Yeela Bar')">Copy</button></div>
+                            </div>
+                            <div class="pay-row">
+                                <span class="pay-lbl">BSB</span>
+                                <div><span class="pay-val">182-182</span><button class="copy-btn"
+                                        onclick="cp(this,'182182')">Copy</button></div>
+                            </div>
+                            <div class="pay-row">
+                                <span class="pay-lbl">Account</span>
+                                <div><span class="pay-val">017 272 667</span><button class="copy-btn"
+                                        onclick="cp(this,'017272667')">Copy</button></div>
+                            </div>
+                        </div>
+
+                        <div class="warn-box">⚠️ Always include <strong>your name</strong> in the transfer reference!
+                        </div>
+
+                        <!-- DIET -->
+                        <div>
+                            <div class="section-label">Dietary Restrictions</div>
+                            <div class="diet-grid">
+                                <div class="diet-opt" data-val="none" onclick="selectDiet(this)">
+                                    <div class="de">🍗</div>
+                                    <div class="dl">None</div>
+                                </div>
+                                <div class="diet-opt" data-val="vegetarian" onclick="selectDiet(this)">
+                                    <div class="de">🥗</div>
+                                    <div class="dl">Veg</div>
+                                </div>
+                                <div class="diet-opt" data-val="vegan" onclick="selectDiet(this)">
+                                    <div class="de">🌱</div>
+                                    <div class="dl">Vegan</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SUBMIT -->
+                        <button class="submit-btn" onclick="submitRsvp()">
+                            🎉 I've Paid — Mark Me In!
+                        </button>
+
+                        <div style="text-align:center;font-size:0.78rem;color:var(--muted);padding-bottom:0.5rem">
+                            Can't make it? <a href="#" onclick="cantMake()" style="color:var(--pink)">Let Ye'ela
+                                know</a>
+                        </div>
+                    </div>
+
+                    <!-- SUCCESS -->
+                    <div class="rsvp-success" id="rsvp-success">
+                        <div class="big">🎊</div>
+                        <h2 id="s-title">See you there!</h2>
+                        <p id="s-msg">Don't forget your costume. No costume, no entry! 🎭</p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div><!-- /panels -->
+
+        <!-- OREN CREDIT BADGE -->
+        <div id="oren-badge">
+            <img src="oren-logo.jpg" alt="Oren" onerror="this.style.display='none'" />
+            <span>Built by <strong>Oren</strong> 👋</span>
+        </div>
+
+        <!-- TAB BAR -->
+        <nav class="tabbar">
+            <button class="tab active" onclick="goTab(0,this)" id="tab-0">
+                <span class="tab-icon">🎊</span>
+                <span>Party</span>
+            </button>
+            <button class="tab" onclick="goTab(1,this)" id="tab-1">
+                <span class="tab-icon">🎭</span>
+                <span>Costume</span>
+            </button>
+            <button class="tab" onclick="goTab(2,this)" id="tab-2">
+                <span class="tab-icon">📍</span>
+                <span>Location</span>
+            </button>
+            <button class="tab" onclick="goTab(3,this)" id="tab-3">
+                <span class="tab-icon">🎟️</span>
+                <span>RSVP</span>
+            </button>
+        </nav>
+    </div>
+
+    <script>
+        /* ── FLOATERS ── */
+        const EMOJIS = ['🎭', '🎊', '⭐', '🎪', '🎶', '🏆', '🎩', '🎋', '✨', '🎉', '🥂', '🌟'];
+        const container = document.getElementById('floaters');
+        for (let i = 0; i < 20; i++) {
+            const el = document.createElement('div');
+            el.className = 'floater';
+            el.textContent = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+            el.style.left = Math.random() * 100 + 'vw';
+            el.style.animationDuration = (Math.random() * 12 + 10) + 's';
+            el.style.animationDelay = (Math.random() * 15) + 's';
+            el.style.fontSize = (Math.random() * 1.2 + 0.8) + 'rem';
+            container.appendChild(el);
+        }
+
+        /* ── COUNTDOWN ── */
+        (function cd() {
+            const target = new Date('2026-03-07T19:00:00+11:00');
+            const wrap = document.getElementById('cd-wrap');
+            function tick() {
+                const diff = target - new Date();
+                if (diff <= 0) { wrap.innerHTML = '<div class="party-on">🎉 It\'s Party Time! 🎉</div>'; return; }
+                const d = Math.floor(diff / 86400000);
+                const h = Math.floor((diff % 86400000) / 3600000);
+                const m = Math.floor((diff % 3600000) / 60000);
+                const s = Math.floor((diff % 60000) / 1000);
+                wrap.innerHTML = ['Days', 'Hours', 'Mins', 'Secs'].map((l, i) => {
+                    const n = [d, h, m, s][i];
+                    return `<div class="cd"><div class="cd-n">${String(n).padStart(2, '0')}</div><div class="cd-l">${l}</div></div>`;
+                }).join('');
+            }
+            tick();
+            setInterval(tick, 1000);
+        })();
+
+        /* ── TABS ── */
+        const panels = document.querySelectorAll('.panel');
+        const tabs = document.querySelectorAll('.tab');
+        let currentTab = 0;
+
+        function goTab(idx, btn) {
+            if (idx === currentTab) return;
+            panels[currentTab].classList.add(idx > currentTab ? 'exit-left' : '');
+            panels[currentTab].classList.remove('active');
+            setTimeout(() => panels[currentTab < idx ? currentTab : idx].classList.remove('exit-left'), 380);
+            currentTab = idx;
+            panels[idx].classList.remove('exit-left');
+            panels[idx].classList.add('active');
+            tabs.forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        /* ── RSVP ── */
+        function selectTicket(el) {
+            document.querySelectorAll('.ticket').forEach(t => t.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+        function selectDiet(el) {
+            document.querySelectorAll('.diet-opt').forEach(d => d.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+        function cp(btn, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const orig = btn.textContent;
+                btn.textContent = '✓'; btn.classList.add('ok');
+                setTimeout(() => { btn.textContent = orig; btn.classList.remove('ok'); }, 1800);
+            });
+        }
+        function submitRsvp() {
+            const ticket = document.querySelector('.ticket.selected');
+            if (!ticket) { alert('Please select a ticket type first!'); return; }
+            showSuccess(
+                '🎊 You\'re on the list!',
+                `${ticket.dataset.val === 'couple' ? 'Two tickets' : 'One ticket'} booked. Don't forget: no costume = no entry! 🎭`
+            );
+        }
+        function cantMake() {
+            showSuccess('😢 We\'ll miss you!', 'Thanks for letting Ye\'ela know. Maybe next year! 💛');
+        }
+        function showSuccess(title, msg) {
+            document.getElementById('rsvp-form-block').style.display = 'none';
+            const s = document.getElementById('rsvp-success');
+            s.style.display = 'flex';
+            document.getElementById('s-title').textContent = title;
+            document.getElementById('s-msg').textContent = msg;
+        }
+    </script>
+</body>
+
+</html>

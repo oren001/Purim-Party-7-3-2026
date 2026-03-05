@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ye'ela's Guest Dashboard 🎭</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            --gold: #f5c842;
+            --purple: #6b21a8;
+            --purple-light: #a855f7;
+            --magenta: #d946ef;
+            --dark: #0c0010;
+            --card-bg: rgba(255, 255, 255, 0.06);
+            --card-border: rgba(255, 255, 255, 0.12);
+            --text: #f0e6ff;
+            --muted: #b89cc8;
+            --green: #4ade80;
+            --red: #f87171;
+            --orange: #fb923c;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* LOGIN */
+        #login-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 1.5rem;
+            background: radial-gradient(ellipse at 30% 20%, rgba(107, 33, 168, 0.4) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 80%, rgba(217, 70, 239, 0.25) 0%, transparent 60%);
+        }
+
+        #login-screen h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--gold), var(--purple-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        #login-screen p {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        #pw-input {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 0.8rem 1.2rem;
+            color: var(--text);
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            width: 260px;
+            outline: none;
+            text-align: center;
+            letter-spacing: 3px;
+        }
+
+        #pw-input:focus {
+            border-color: rgba(168, 85, 247, 0.6);
+        }
+
+        #pw-btn {
+            background: linear-gradient(135deg, var(--purple-light), var(--magenta));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: transform 0.2s;
+        }
+
+        #pw-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        #pw-err {
+            color: var(--red);
+            font-size: 0.85rem;
+            display: none;
+        }
+
+        /* DASHBOARD */
+        #dashboard {
+            display: none;
+        }
+
+        /* TOPBAR */
+        .topbar {
+            background: rgba(255, 255, 255, 0.04);
+            border-bottom: 1px solid var(--card-border);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(16px);
+        }
+
+        .topbar h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            background: linear-gradient(135deg, var(--gold), var(--purple-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .topbar-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .btn-sm {
+            padding: 0.45rem 1rem;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            transition: transform 0.15s;
+        }
+
+        .btn-sm:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold), #e8a600);
+            color: #1a002a;
+        }
+
+        .btn-ghost {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text);
+        }
+
+        /* STATS */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1rem;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.2rem 1rem;
+            text-align: center;
+        }
+
+        .stat-num {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.72rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-top: 0.3rem;
+        }
+
+        .stat-gold .stat-num {
+            color: var(--gold);
+        }
+
+        .stat-green .stat-num {
+            color: var(--green);
+        }
+
+        .stat-red .stat-num {
+            color: var(--red);
+        }
+
+        .stat-purple .stat-num {
+            color: var(--purple-light);
+        }
+
+        .stat-orange .stat-num {
+            color: var(--orange);
+        }
+
+        /* CONTROLS */
+        .controls {
+            padding: 1rem 2rem;
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            align-items: center;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .search-box {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 0.55rem 1rem;
+            color: var(--text);
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            width: 220px;
+        }
+
+        .search-box:focus {
+            border-color: rgba(168, 85, 247, 0.5);
+        }
+
+        .filter-btn {
+            padding: 0.45rem 0.9rem;
+            border-radius: 99px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid var(--card-border);
+            background: transparent;
+            color: var(--muted);
+            font-family: 'Inter', sans-serif;
+            transition: all 0.15s;
+        }
+
+        .filter-btn.active {
+            background: rgba(168, 85, 247, 0.2);
+            border-color: var(--purple-light);
+            color: var(--text);
+        }
+
+        .filter-btn:hover {
+            color: var(--text);
+        }
+
+        /* TABLE */
+        .table-wrap {
+            overflow-x: auto;
+            padding: 1rem 2rem 3rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+
+        thead th {
+            text-align: left;
+            padding: 0.75rem 0.75rem;
+            font-size: 0.72rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--muted);
+            border-bottom: 1px solid var(--card-border);
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        thead th:hover {
+            color: var(--text);
+        }
+
+        tbody tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            transition: background 0.15s;
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        tbody td {
+            padding: 0.7rem 0.75rem;
+            vertical-align: middle;
+        }
+
+        .guest-name {
+            font-weight: 600;
+            font-size: 0.92rem;
+        }
+
+        /* STATUS BADGES */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.3rem 0.75rem;
+            border-radius: 99px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .badge-pending {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--muted);
+            border: 1px solid var(--card-border);
+        }
+
+        .badge-single {
+            background: rgba(168, 85, 247, 0.18);
+            color: var(--purple-light);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+        }
+
+        .badge-couple {
+            background: rgba(217, 70, 239, 0.15);
+            color: var(--magenta);
+            border: 1px solid rgba(217, 70, 239, 0.3);
+        }
+
+        .badge-no {
+            background: rgba(248, 113, 113, 0.12);
+            color: var(--red);
+            border: 1px solid rgba(248, 113, 113, 0.3);
+        }
+
+        .badge-paid {
+            background: rgba(74, 222, 128, 0.12);
+            color: var(--green);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+        }
+
+        .badge-unpaid {
+            background: rgba(251, 146, 60, 0.12);
+            color: var(--orange);
+            border: 1px solid rgba(251, 146, 60, 0.3);
+        }
+
+        /* INLINE SELECTS */
+        .mini-select {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 0.35rem 0.6rem;
+            color: var(--text);
+            font-size: 0.8rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            outline: none;
+            max-width: 140px;
+        }
+
+        .mini-select:focus {
+            border-color: rgba(168, 85, 247, 0.5);
+        }
+
+        .notes-input {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 0.3rem 0.6rem;
+            color: var(--text);
+            font-size: 0.8rem;
+            font-family: 'Inter', sans-serif;
+            width: 140px;
+            outline: none;
+        }
+
+        .notes-input:focus {
+            border-color: rgba(168, 85, 247, 0.4);
+        }
+
+        .add-guest-form {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .add-name-input {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 10px;
+            padding: 0.5rem 0.9rem;
+            color: var(--text);
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            width: 200px;
+        }
+
+        .add-name-input:focus {
+            border-color: rgba(168, 85, 247, 0.7);
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.12);
+        }
+
+        .del-btn {
+            background: transparent;
+            border: none;
+            color: rgba(248, 113, 113, 0.4);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0.3rem;
+            transition: color 0.15s;
+            line-height: 1;
+        }
+
+        .del-btn:hover {
+            color: var(--red);
+        }
+
+        .empty-row td {
+            text-align: center;
+            color: var(--muted);
+            padding: 2rem;
+            font-style: italic;
+        }
+
+        /* Export modal */
+        #export-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #export-modal.open {
+            display: flex;
+        }
+
+        .modal-box {
+            background: #1a0030;
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-box h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .modal-box pre {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1rem;
+            font-size: 0.8rem;
+            color: var(--text);
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 700px) {
+            .topbar {
+                padding: 0.75rem 1rem;
+            }
+
+            .stats-bar {
+                padding: 1rem;
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .controls {
+                padding: 0.75rem 1rem;
+            }
+
+            .table-wrap {
+                padding: 0.5rem 0.75rem 3rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOGIN -->
+    <div id="login-screen">
+        <div style="font-size:3.5rem">🎭</div>
+        <h1>Host Dashboard</h1>
+        <p>Ye'ela's party management — enter password to access</p>
+        <input type="password" id="pw-input" placeholder="Password" onkeyup="if(event.key==='Enter') checkPw()" />
+        <button id="pw-btn" onclick="checkPw()">Enter 🔑</button>
+        <div id="pw-err">Incorrect password. Try again.</div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="dashboard">
+
+        <div class="topbar">
+            <h1>🎭 Guest Dashboard · Ye'ela's Purim 2026</h1>
+            <div class="topbar-actions">
+                <div class="add-guest-form">
+                    <input class="add-name-input" id="new-guest-name" placeholder="+ Guest name"
+                        onkeyup="if(event.key==='Enter') addGuest()" />
+                    <button class="btn-sm btn-gold" onclick="addGuest()">Add</button>
+                </div>
+                <button class="btn-sm btn-ghost" onclick="openExport()">📋 Export</button>
+                <button class="btn-sm btn-ghost" onclick="logout()">Log out</button>
+            </div>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats-bar" id="stats-bar"></div>
+
+        <!-- CONTROLS -->
+        <div class="controls">
+            <input class="search-box" id="search-input" placeholder="🔍 Search guests..." oninput="render()" />
+            <button class="filter-btn active" data-filter="all" onclick="setFilter('all',this)">All</button>
+            <button class="filter-btn" data-filter="single" onclick="setFilter('single',this)">🕺 Solo</button>
+            <button class="filter-btn" data-filter="couple" onclick="setFilter('couple',this)">💑 Couple</button>
+            <button class="filter-btn" data-filter="no" onclick="setFilter('no',this)">😢 Not Coming</button>
+            <button class="filter-btn" data-filter="pending" onclick="setFilter('pending',this)">⏳ Pending</button>
+            <button class="filter-btn" data-filter="unpaid" onclick="setFilter('unpaid',this)">💸 Unpaid</button>
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-wrap">
+            <table id="guest-table">
+                <thead>
+                    <tr>
+                        <th onclick="sortBy('name')"># Name ↕</th>
+                        <th onclick="sortBy('rsvp')">RSVP ↕</th>
+                        <th onclick="sortBy('payment')">Payment ↕</th>
+                        <th onclick="sortBy('diet')">Diet ↕</th>
+                        <th>Notes</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="guest-tbody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- EXPORT MODAL -->
+    <div id="export-modal">
+        <div class="modal-box" style="position:relative">
+            <button class="modal-close" onclick="closeExport()">✕</button>
+            <h3>📋 Export Guest Data</h3>
+            <pre id="export-text"></pre>
+            <div class="modal-actions">
+                <button class="btn-sm btn-gold" onclick="copyExport()">Copy to clipboard</button>
+                <button class="btn-sm btn-ghost" onclick="closeExport()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const PASSWORD = 'purim2026';
+        const STORAGE_KEY = 'yeela_purim_guests_v2';
+
+        const INITIAL_GUESTS = [
+            'Adi', 'Alina', 'Angela', 'Annabel (Inbal) Marom', 'Atar', 'Ben',
+            'Boris Bbl', 'Dana AU', 'Daphna', 'Dror Dagan', 'Einat', 'Einav Pat',
+            'Elian', 'ES', 'Hadar Marlow', 'Hadas Feldman', 'Ilana Borshtin',
+            'Itzik Feldman', 'Jonathan', 'Karin Shmaltz', 'Limor Fayena',
+            'Meiran Rubinstein', 'Merav Green', 'Michal Weiss', 'Moran',
+            'Moran Baillie', 'Naama', 'Natali', 'Nay', 'Nevo', 'Nissim Bar Gerbi',
+            'Nitzan Talmor', 'Noa Lamm', 'Noy', 'Ofira Walker', 'Oren Feldman',
+            'Oren Rubinstein', 'Ran', 'Roni Kahana', 'Ronit Bolkovshtein Nevo',
+            'Roy Marlow', 'Sapir Alma', 'Shachar Burla', 'Shay',
+            'Shir Mousseri Sorotzky', 'Shiri Bahar Massami', 'Shiri Barda',
+            'Tal', 'Tomer', 'Yael', 'Yael Wainmann', 'Yaeli Kario',
+            'Yaffa Waskman', 'Yifat Shirben', 'Yonit Nahmias'
+        ];
+
+        let guests = [];
+        let currentFilter = 'all';
+        let sortField = 'name';
+        let sortDir = 1;
+
+        function makeGuest(name) {
+            return { id: Date.now() + Math.random(), name, rsvp: 'pending', payment: 'unpaid', diet: 'unknown', notes: '' };
+        }
+
+        function loadGuests() {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (raw) {
+                guests = JSON.parse(raw);
+            } else {
+                guests = INITIAL_GUESTS.map(n => makeGuest(n));
+                saveGuests();
+            }
+        }
+
+        function saveGuests() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(guests));
+        }
+
+        /* ── AUTH ── */
+        function checkPw() {
+            const val = document.getElementById('pw-input').value;
+            if (val === PASSWORD) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                loadGuests();
+                render();
+                updateStats();
+            } else {
+                document.getElementById('pw-err').style.display = 'block';
+                document.getElementById('pw-input').value = '';
+            }
+        }
+        function logout() {
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('pw-input').value = '';
+        }
+
+        /* ── STATS ── */
+        function updateStats() {
+            const total = guests.length;
+            const coming = guests.filter(g => g.rsvp === 'single' || g.rsvp === 'couple');
+            const notComing = guests.filter(g => g.rsvp === 'no').length;
+            const pending = guests.filter(g => g.rsvp === 'pending').length;
+            const paid = guests.filter(g => g.payment === 'paid').length;
+            const unpaid = coming.filter(g => g.payment !== 'paid').length;
+
+            // Count heads
+            let heads = 0;
+            let revenue = 0;
+            guests.forEach(g => {
+                if (g.rsvp === 'single') { heads += 1; revenue += 45; }
+                if (g.rsvp === 'couple') { heads += 2; revenue += 90; }
+            });
+
+            const paidRevenue = guests.filter(g => g.payment === 'paid').reduce((t, g) => {
+                if (g.rsvp === 'single') return t + 45;
+                if (g.rsvp === 'couple') return t + 90;
+                return t;
+            }, 0);
+
+            document.getElementById('stats-bar').innerHTML = `
+    <div class="stat-card stat-gold"><div class="stat-num">${total}</div><div class="stat-label">Invited</div></div>
+    <div class="stat-card stat-green"><div class="stat-num">${coming.length}</div><div class="stat-label">RSVPd Yes</div></div>
+    <div class="stat-card stat-purple"><div class="stat-num">${heads}</div><div class="stat-label">People Attending</div></div>
+    <div class="stat-card stat-gold"><div class="stat-num">${paid}</div><div class="stat-label">Paid</div></div>
+    <div class="stat-card" style=""><div class="stat-num" style="color:var(--orange)">${unpaid}</div><div class="stat-label">Unpaid (coming)</div></div>
+    <div class="stat-card stat-green"><div class="stat-num">$${paidRevenue}</div><div class="stat-label">$$$ Collected</div></div>
+    <div class="stat-card" style=""><div class="stat-num" style="color:var(--red)">${notComing}</div><div class="stat-label">Not Coming</div></div>
+    <div class="stat-card stat-purple"><div class="stat-num">${pending}</div><div class="stat-label">Pending RSVP</div></div>
+  `;
+        }
+
+        /* ── FILTER / SORT ── */
+        function setFilter(f, el) {
+            currentFilter = f;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            render();
+        }
+
+        function sortBy(field) {
+            if (sortField === field) sortDir *= -1;
+            else { sortField = field; sortDir = 1; }
+            render();
+        }
+
+        function getFiltered() {
+            const q = (document.getElementById('search-input')?.value || '').toLowerCase();
+            return guests
+                .filter(g => {
+                    if (q && !g.name.toLowerCase().includes(q)) return false;
+                    if (currentFilter === 'all') return true;
+                    if (currentFilter === 'unpaid') return (g.rsvp === 'single' || g.rsvp === 'couple') && g.payment !== 'paid';
+                    return g.rsvp === currentFilter;
+                })
+                .sort((a, b) => {
+                    let av = a[sortField] || '', bv = b[sortField] || '';
+                    if (av < bv) return -1 * sortDir;
+                    if (av > bv) return 1 * sortDir;
+                    return 0;
+                });
+        }
+
+        /* ── RENDER ── */
+        function rsvpBadge(val) {
+            if (val === 'single') return '<span class="badge badge-single">🕺 Solo</span>';
+            if (val === 'couple') return '<span class="badge badge-couple">💑 Couple</span>';
+            if (val === 'no') return '<span class="badge badge-no">😢 Not Coming</span>';
+            return '<span class="badge badge-pending">⏳ Pending</span>';
+        }
+        function payBadge(rsvp, val) {
+            if (rsvp === 'no' || rsvp === 'pending') return '—';
+            if (val === 'paid') return '<span class="badge badge-paid">✓ Paid</span>';
+            return '<span class="badge badge-unpaid">💸 Unpaid</span>';
+        }
+        function dietLabel(val) {
+            if (val === 'none') return '🍗 None';
+            if (val === 'vegetarian') return '🥗 Veg';
+            if (val === 'vegan') return '🌱 Vegan';
+            return '—';
+        }
+
+        function render() {
+            const list = getFiltered();
+            const tbody = document.getElementById('guest-tbody');
+            if (!list.length) {
+                tbody.innerHTML = '<tr class="empty-row"><td colspan="6">No guests match the current filter.</td></tr>';
+                return;
+            }
+            tbody.innerHTML = list.map((g, i) => `
+    <tr>
+      <td class="guest-name">${i + 1}. ${escHtml(g.name)}</td>
+      <td>
+        <select class="mini-select" onchange="updateField('${g.id}','rsvp',this.value)">
+          <option value="pending" ${g.rsvp === 'pending' ? 'selected' : ''}>⏳ Pending</option>
+          <option value="single" ${g.rsvp === 'single' ? 'selected' : ''}>🕺 Solo</option>
+          <option value="couple" ${g.rsvp === 'couple' ? 'selected' : ''}>💑 Couple</option>
+          <option value="no" ${g.rsvp === 'no' ? 'selected' : ''}>😢 Not Coming</option>
+        </select>
+      </td>
+      <td>
+        ${(g.rsvp === 'single' || g.rsvp === 'couple') ? `
+        <select class="mini-select" onchange="updateField('${g.id}','payment',this.value)">
+          <option value="unpaid" ${g.payment !== 'paid' ? 'selected' : ''}>💸 Unpaid</option>
+          <option value="paid" ${g.payment === 'paid' ? 'selected' : ''}>✓ Paid</option>
+        </select>` : '<span style="color:var(--muted);font-size:0.8rem">—</span>'}
+      </td>
+      <td>
+        <select class="mini-select" onchange="updateField('${g.id}','diet',this.value)">
+          <option value="unknown" ${g.diet === 'unknown' ? 'selected' : ''}>—</option>
+          <option value="none" ${g.diet === 'none' ? 'selected' : ''}>🍗 None</option>
+          <option value="vegetarian" ${g.diet === 'vegetarian' ? 'selected' : ''}>🥗 Veg</option>
+          <option value="vegan" ${g.diet === 'vegan' ? 'selected' : ''}>🌱 Vegan</option>
+        </select>
+      </td>
+      <td>
+        <input class="notes-input" value="${escHtml(g.notes)}" placeholder="notes..."
+          onchange="updateField('${g.id}','notes',this.value)" />
+      </td>
+      <td>
+        <button class="del-btn" onclick="delGuest('${g.id}')" title="Remove">✕</button>
+      </td>
+    </tr>
+  `).join('');
+            updateStats();
+        }
+
+        function escHtml(str) {
+            return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function updateField(id, field, val) {
+            const g = guests.find(x => String(x.id) === String(id));
+            if (g) { g[field] = val; saveGuests(); updateStats(); render(); }
+        }
+
+        function addGuest() {
+            const inp = document.getElementById('new-guest-name');
+            const name = inp.value.trim();
+            if (!name) return;
+            guests.unshift(makeGuest(name));
+            saveGuests();
+            inp.value = '';
+            render();
+        }
+
+        function delGuest(id) {
+            const g = guests.find(x => String(x.id) === String(id));
+            if (!g) return;
+            if (!confirm(`Remove "${g.name}" from the list?`)) return;
+            guests = guests.filter(x => String(x.id) !== String(id));
+            saveGuests();
+            render();
+        }
+
+        /* ── EXPORT ── */
+        function openExport() {
+            const coming = guests.filter(g => g.rsvp === 'single' || g.rsvp === 'couple');
+            const notComing = guests.filter(g => g.rsvp === 'no');
+            const pending = guests.filter(g => g.rsvp === 'pending');
+
+            let lines = [];
+            lines.push('=== PURIM 2026 · GUEST LIST SUMMARY ===');
+            lines.push(`Generated: ${new Date().toLocaleString()}`);
+            lines.push('');
+
+            lines.push(`✅ COMING (${coming.length} RSVPs):`);
+            coming.forEach(g => {
+                const type = g.rsvp === 'couple' ? 'Couple ($90)' : 'Solo ($45)';
+                const pay = g.payment === 'paid' ? '✓ PAID' : '⚠ UNPAID';
+                const diet = g.diet === 'vegetarian' ? ' [VEG]' : g.diet === 'vegan' ? ' [VEGAN]' : '';
+                lines.push(`  • ${g.name} — ${type} — ${pay}${diet}${g.notes ? ' — ' + g.notes : ''}`);
+            });
+            lines.push('');
+
+            const veg = guests.filter(g => g.diet === 'vegetarian');
+            const vegan = guests.filter(g => g.diet === 'vegan');
+            if (veg.length || vegan.length) {
+                lines.push('🥗 DIETARY RESTRICTIONS:');
+                if (veg.length) lines.push(`  Vegetarian (${veg.length}): ${veg.map(g => g.name).join(', ')}`);
+                if (vegan.length) lines.push(`  Vegan (${vegan.length}): ${vegan.map(g => g.name).join(', ')}`);
+                lines.push('');
+            }
+
+            const unpaidComing = coming.filter(g => g.payment !== 'paid');
+            if (unpaidComing.length) {
+                lines.push(`💸 STILL NEED TO PAY (${unpaidComing.length}):`);
+                unpaidComing.forEach(g => lines.push(`  • ${g.name} (${g.rsvp === 'couple' ? '$90' : '$45'})`));
+                lines.push('');
+            }
+
+            if (pending.length) {
+                lines.push(`⏳ AWAITING RSVP (${pending.length}):`);
+                pending.forEach(g => lines.push(`  • ${g.name}`));
+                lines.push('');
+            }
+
+            if (notComing.length) {
+                lines.push(`❌ NOT COMING (${notComing.length}):`);
+                lines.push('  ' + notComing.map(g => g.name).join(', '));
+                lines.push('');
+            }
+
+            const totalRev = coming.reduce((t, g) => t + (g.rsvp === 'couple' ? 90 : 45), 0);
+            const paidRev = coming.filter(g => g.payment === 'paid').reduce((t, g) => t + (g.rsvp === 'couple' ? 90 : 45), 0);
+            lines.push(`💰 FINANCIALS: Total expected $${totalRev} · Collected $${paidRev} · Outstanding $${totalRev - paidRev}`);
+
+            document.getElementById('export-text').textContent = lines.join('\n');
+            document.getElementById('export-modal').classList.add('open');
+        }
+        function closeExport() { document.getElementById('export-modal').classList.remove('open'); }
+        function copyExport() {
+            navigator.clipboard.writeText(document.getElementById('export-text').textContent).then(() => {
+                alert('Copied to clipboard!');
+            });
+        }
+    </script>
+</body>
+
+</html>
